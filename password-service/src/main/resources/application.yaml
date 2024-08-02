@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: password-service
+  config:
+    import: "optional:configserver:http://localhost:8088"
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/passwords}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
