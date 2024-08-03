@@ -44,6 +44,7 @@ public class UserService implements IUserService {
 
     @Override
     public Page<PasswordResponse> getUserPasswords(UUID userId, int size, int pageNumber) {
+        ifUserNotExistsByIdThrowException(userId);
         PasswordPageResponse passwordPageResponse = passwordClient.getPasswordsByUserId(userId, size, pageNumber);
         return buildPasswordResponsePage(passwordPageResponse);
     }
@@ -54,15 +55,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findUserByIdOrThrowException(UUID userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " does not exist."));
-    }
-
-    @Override
-    public User findUserByUsernameOrThrowException(String username) {
-        return userRepository.findByUsername(username)
+    public UserResponse findUserByUsernameOrThrowException(String username) {
+        User existentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("User with username " + username + " does not exist."));
+        return UserMapper.buildUserResponse(existentUser);
     }
 
     private Page<PasswordResponse> buildPasswordResponsePage(PasswordPageResponse passwordPageResponse) {
@@ -74,5 +70,10 @@ public class UserService implements IUserService {
     private void ifExistsByUsernameThrowException(String username) {
         if (userRepository.existsByUsername(username))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists.");
+    }
+
+    private void ifUserNotExistsByIdThrowException(UUID userId) {
+        if (!existsUserById(userId))
+            throw new NoSuchElementException("User with id " + userId + " does not exist.");
     }
 }

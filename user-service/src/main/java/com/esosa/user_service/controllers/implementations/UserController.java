@@ -32,4 +32,9 @@ public class UserController implements IUserController {
     public Boolean existsUserById(UUID userId) {
         return userService.existsUserById(userId);
     }
+
+    @Override
+    public UserResponse getUserByUsername(String username) {
+        return userService.findUserByUsernameOrThrowException(username);
+    }
 }

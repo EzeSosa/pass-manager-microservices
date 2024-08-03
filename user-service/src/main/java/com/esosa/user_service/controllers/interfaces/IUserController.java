@@ -32,4 +32,8 @@ public interface IUserController {
     @GetMapping("/{userId}/exists")
     @ResponseStatus(HttpStatus.OK)
     Boolean existsUserById(@PathVariable UUID userId);
+
+    @GetMapping("/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    UserResponse getUserByUsername(@PathVariable String username);
 }
