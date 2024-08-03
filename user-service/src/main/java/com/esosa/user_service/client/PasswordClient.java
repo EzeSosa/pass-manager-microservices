@@ -11,7 +11,7 @@ import java.util.UUID;
 @HttpExchange
 public interface PasswordClient {
     @GetExchange("/api/v1/passwords/users/{userId}")
-    public PasswordPageResponse getPasswordsByUserId(
+    PasswordPageResponse getPasswordsByUserId(
             @PathVariable UUID userId,
             @RequestParam int size,
             @RequestParam int pageNumber
