@@ -3,3 +3,6 @@ spring:
     name: auth-service
   config:
     import: "optional:configserver:http://localhost:8088"
+
+jwt:
+  secret: ${SECRET_KEY:iIV7aCZjFda+ubeOWRHTU4NeXNCvEwo0qMojLwz84yw=}
