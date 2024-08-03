@@ -26,22 +26,20 @@ import java.util.UUID;
 public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final PasswordClient passwordClient;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(IUserRepository userRepository, PasswordClient passwordClient, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService(IUserRepository userRepository, PasswordClient passwordClient, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordClient = passwordClient;
-        this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserResponse saveUser(UserRequest userRequest) {
         ifExistsByUsernameThrowException(userRequest.username());
-        User newUser = userMapper.buildUser(userRequest, passwordEncoder);
+        User newUser = UserMapper.buildUser(userRequest, passwordEncoder);
         userRepository.save(newUser);
-        return userMapper.buildUserResponse(newUser);
+        return UserMapper.buildUserResponse(newUser);
     }
 
     @Override
