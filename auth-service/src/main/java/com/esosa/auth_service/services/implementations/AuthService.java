@@ -2,7 +2,6 @@ package com.esosa.auth_service.services.implementations;
 
 import com.esosa.auth_service.client.UserClient;
 import com.esosa.auth_service.controllers.requests.AuthRequest;
-import com.esosa.auth_service.controllers.requests.ValidateTokenRequest;
 import com.esosa.auth_service.controllers.responses.AuthResponse;
 import com.esosa.auth_service.controllers.responses.UserResponse;
 import com.esosa.auth_service.services.interfaces.IAuthService;
@@ -45,8 +44,8 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public Boolean validateToken(ValidateTokenRequest validateTokenRequest) {
-        return jwtService.isTokenValid(validateTokenRequest.accessToken(), validateTokenRequest.username());
+    public Boolean validateToken(String accessToken) {
+        return jwtService.isTokenValid(accessToken);
     }
 
     private String generateAccessToken(String username) {

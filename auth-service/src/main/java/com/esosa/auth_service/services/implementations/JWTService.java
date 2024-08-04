@@ -23,9 +23,8 @@ public class JWTService {
         return createToken(new HashMap<>(), username);
     }
 
-    public boolean isTokenValid(String token, String username){
-        String tokenUsername = extractUsernameFromToken(token);
-        return (username.equals(tokenUsername) && !isTokenExpired(token));
+    public boolean isTokenValid(String token) {
+        return (!isTokenExpired(token));
     }
 
     private Claims getAllClaims(String token) {
@@ -50,10 +49,6 @@ public class JWTService {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    private String extractUsernameFromToken(String token) {
-        return getClaim(token, Claims::getSubject);
     }
 
     private Key getSignKey() {
