@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ public class PasswordService implements IPasswordService {
 
     @Override
     public Page<PasswordResponse> getUserPasswords(UUID userId, int size, int pageNumber) {
+        List<Password> userPasswords = passwordRepository.findByUserId(userId);
         PageRequest pageRequest = PageRequest.of(pageNumber, size, Sort.by("name"));
         return passwordRepository.findByUserId(pageRequest, userId)
                 .map(PasswordMapper::buildPasswordResponse);
