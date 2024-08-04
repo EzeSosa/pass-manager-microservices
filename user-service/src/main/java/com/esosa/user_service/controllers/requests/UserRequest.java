@@ -1,8 +1,8 @@
 package com.esosa.user_service.controllers.requests;
 
-import org.springframework.lang.NonNull;
+import jakarta.validation.constraints.NotNull;
 
 public record UserRequest(
-        @NonNull String username,
-        @NonNull String password
+        @NotNull String username,
+        @NotNull String password
 ) {}
