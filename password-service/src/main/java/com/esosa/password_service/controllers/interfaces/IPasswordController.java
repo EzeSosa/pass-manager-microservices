@@ -24,7 +24,7 @@ public interface IPasswordController {
     @ResponseStatus(HttpStatus.OK)
     PasswordResponse getPassword(@PathVariable UUID passwordId);
 
-    @PostMapping
+    @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     PasswordResponse savePassword(@RequestBody CreatePasswordRequest createPasswordRequest);
 
