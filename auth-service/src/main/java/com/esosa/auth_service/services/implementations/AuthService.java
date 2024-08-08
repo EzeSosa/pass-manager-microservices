@@ -7,6 +7,7 @@ import com.esosa.auth_service.controllers.responses.AuthResponse;
 import com.esosa.auth_service.controllers.responses.RefreshTokenResponse;
 import com.esosa.auth_service.controllers.responses.UserResponse;
 import com.esosa.auth_service.services.interfaces.IAuthService;
+import com.esosa.auth_service.utils.TokenType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -54,8 +55,8 @@ public class AuthService implements IAuthService {
 
     @Override
     public RefreshTokenResponse refresh(RefreshTokenRequest refreshTokenRequest) {
-        if (!validateToken(refreshTokenRequest.refreshToken()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access token is not valid");
+        ifNotRefreshTokenThrowException(refreshTokenRequest.refreshToken());
+        ifRefreshTokenNotValidThrowException(refreshTokenRequest.refreshToken());
 
         String username = jwtService.extractUsernameFromToken(refreshTokenRequest.refreshToken());
         String newAccessToken = generateAccessToken(username);
@@ -64,16 +65,32 @@ public class AuthService implements IAuthService {
 
     @Override
     public Boolean validateToken(String token) {
+        ifNotAccessTokenThrowException(token);
         return jwtService.isTokenValid(token);
     }
 
     private String generateAccessToken(String username) {
         Date expirationDate = new Date(System.currentTimeMillis() + accessTokenExpiration);
-        return jwtService.generateToken(username, expirationDate);
+        return jwtService.generateToken(username, expirationDate, TokenType.ACCESS);
     }
 
     private String generateRefreshToken(String username) {
         Date expirationDate = new Date(System.currentTimeMillis() + refreshTokenExpiration);
-        return jwtService.generateToken(username, expirationDate);
+        return jwtService.generateToken(username, expirationDate, TokenType.REFRESH);
+    }
+
+    private void ifNotAccessTokenThrowException(String token) {
+        if (jwtService.extractTokenTypeFromToken(token) != "ACCESS")
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not an access token");
+    }
+
+    private void ifNotRefreshTokenThrowException(String token) {
+        if (jwtService.extractTokenTypeFromToken(token) != "REFRESH")
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not an refresh token");
+    }
+
+    private void ifRefreshTokenNotValidThrowException(String refreshToken) {
+        if (!validateToken(refreshToken))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access token is not valid");
     }
 }
