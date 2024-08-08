@@ -1,5 +1,7 @@
 package com.esosa.auth_service.services.implementations;
 
+import com.esosa.auth_service.utils.TokenType;
+import com.netflix.discovery.shared.Pair;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,8 +21,9 @@ public class JWTService {
     @Value("${jwt.secret}")
     private String SECRET;
 
-    public String generateToken(String username, Date expirationDate) {
-        return createToken(new HashMap<>(), username, expirationDate);
+    public String generateToken(String username, Date expirationDate, TokenType tokenType) {
+        Map<String, Object> tokenClaims = Map.of("tokenType", tokenType.name());
+        return createToken(tokenClaims, username, expirationDate);
     }
 
     public boolean isTokenValid(String token) {
@@ -29,6 +32,11 @@ public class JWTService {
 
     public String extractUsernameFromToken(String token) {
         return getClaim(token, Claims::getSubject);
+    }
+
+    public Object extractTokenTypeFromToken(String token) {
+        Claims tokenClaims = getAllClaims(token);
+        return tokenClaims.get("tokenType");
     }
 
     private Claims getAllClaims(String token) {
