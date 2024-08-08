@@ -19,12 +19,16 @@ public class JWTService {
     @Value("${jwt.secret}")
     private String SECRET;
 
-    public String generateToken(String username) {
-        return createToken(new HashMap<>(), username);
+    public String generateToken(String username, Date expirationDate) {
+        return createToken(new HashMap<>(), username, expirationDate);
     }
 
     public boolean isTokenValid(String token) {
         return (!isTokenExpired(token));
+    }
+
+    public String extractUsernameFromToken(String token) {
+        return getClaim(token, Claims::getSubject);
     }
 
     private Claims getAllClaims(String token) {
@@ -41,12 +45,12 @@ public class JWTService {
         return claimsResolver.apply(claims);
     }
 
-    private String createToken(Map<String, Object> claims, String username) {
+    private String createToken(Map<String, Object> claims, String username, Date expirationDate) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .setExpiration(expirationDate)
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
