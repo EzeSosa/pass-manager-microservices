@@ -6,3 +6,5 @@ spring:
 
 jwt:
   secret: ${SECRET_KEY:iIV7aCZjFda+ubeOWRHTU4NeXNCvEwo0qMojLwz84yw=}
+  access-token-expiration: 3600000
+  refresh-token-expiration: 432000000
