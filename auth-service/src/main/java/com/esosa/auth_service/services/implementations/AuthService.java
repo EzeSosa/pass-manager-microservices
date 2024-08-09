@@ -90,7 +90,7 @@ public class AuthService implements IAuthService {
     }
 
     private void ifRefreshTokenNotValidThrowException(String refreshToken) {
-        if (!validateToken(refreshToken))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access token is not valid");
+        if (!jwtService.isTokenValid(refreshToken))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token is not valid");
     }
 }
