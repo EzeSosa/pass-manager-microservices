@@ -80,12 +80,12 @@ public class AuthService implements IAuthService {
     }
 
     private void ifNotAccessTokenThrowException(String token) {
-        if (jwtService.extractTokenTypeFromToken(token) != "ACCESS")
+        if (!jwtService.extractTokenTypeFromToken(token).equals("ACCESS"))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not an access token");
     }
 
     private void ifNotRefreshTokenThrowException(String token) {
-        if (jwtService.extractTokenTypeFromToken(token) != "REFRESH")
+        if (!jwtService.extractTokenTypeFromToken(token).equals("REFRESH"))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token is not an refresh token");
     }
 
