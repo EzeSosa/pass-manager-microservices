@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.nio.file.AccessDeniedException;
+
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
     private final AuthClient authClient;
@@ -29,6 +31,6 @@ public class AuthInterceptor implements HandlerInterceptor {
         String accessToken = authHeader.substring(7);
 
         try { return authClient.validateToken(accessToken); }
-        catch (Exception ex) { throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad token."); }
+        catch(Exception ex) { throw new AccessDeniedException("Bad token"); }
     }
 }
